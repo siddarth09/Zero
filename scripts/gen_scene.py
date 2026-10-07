@@ -662,6 +662,10 @@ def build(key: str) -> mujoco.MjSpec:
         body.add_camera(name=f"{side}_wrist", pos=list(campos),
                         fovy=fovy, xyaxes=list(r["wrist_cam_xyaxes"]),
                         resolution=list(L.CAM_RES))
+    # Push the near plane in. See L.CAM_ZNEAR: the default clips objects a wrist camera has to
+    # see at grasp range, and it fails silently by rendering them away rather than erroring.
+    spec.visual.map.znear = L.CAM_ZNEAR
+
     for name, (eye, fovy) in L.SCENE_CAMS.items():
         spec.worldbody.add_camera(name=name, pos=list(eye), fovy=fovy,
                                   xyaxes=lookat(eye, L.LOOK_AT), resolution=list(L.CAM_RES))

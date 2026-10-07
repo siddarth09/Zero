@@ -17,7 +17,7 @@
     ft_sensors: ["left_left_finger_ft", "left_right_finger_ft", "right_left_finger_ft", "right_right_finger_ft"]
     ft_rot: [1.000000, -0.000000, 0.000000, -0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, -0.000000, 0.000000, -0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.000000, 0.000000, -0.000000, 1.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000, -0.000000, 0.000000, -0.000000, 1.000000]
     ft_side: ["left", "left", "right", "right"]
-    grip_force: 20.0
+    grip_force: 60.0
     left_eef_frame: left_gripper_link
     left_arm_joints: ["left_waist", "left_shoulder", "left_elbow", "left_forearm_roll", "left_wrist_angle", "left_wrist_rotate"]
     left_grip_joints: [left_left_finger, left_right_finger]

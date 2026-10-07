@@ -5,9 +5,17 @@
 #      ...or the target:  ros2 launch zero_bringup vx300s.launch.py can_x:=0.47 can_y:=0.24
 #                         then run this with  ROBOT=vx300s
 #   2) then, in another terminal:  bash scripts/run_policy.sh
-#   3) press X on the gamepad to start/stop the policy (same button as the recorder)
+#   3) it starts on its own; Ctrl-C to stop
 #
-# Args: $1 = checkpoint dir, $2 = replan horizon in steps (default 25).
+# Set JOY=1 to bring back the gamepad instead, so X starts/stops the policy the way the recorder
+# does. Without it no joystick is needed and none is launched.
+#
+# Args: $1 = checkpoint dir, $2 = replan horizon in steps (default 25). Anything after those is
+# forwarded to the node verbatim, so any policy_node parameter can be set from here, e.g.
+#     bash scripts/run_policy.sh "" 25 -p block_until_settled:=false
+# which matters because the settle wait costs up to settle_timeout_s PER ACTION STEP: with the
+# residual never reaching settle_m the 10 Hz loop degrades to ~1 Hz, and the policy then sees
+# observations ten times staler than anything in its training data.
 #
 # `set -u` is deliberately not used: the ROS setup scripts reference unbound variables.
 set -eo pipefail
@@ -20,11 +28,31 @@ CKPT="$(printf '%s' "${1:-}" | xargs || true)"
 CKPT="${CKPT:-$HOME/zero_runs/crossv2_full_c25/checkpoints/last/pretrained_model}"
 STEPS="$(printf '%s' "${2:-}" | xargs || true)"
 STEPS="${STEPS:-25}"
+# Forward any remaining arguments to the node untouched.
+[ $# -ge 1 ] && shift || true
+[ $# -ge 1 ] && shift || true
 
 # Which robot to drive. The policy is embodiment-agnostic: it emits the 20-dim absolute EEF pose
 # from action.py, and each robot's own eef_control_node turns that into joint commands through
 # its own IK. Only the params file differs; nothing about the checkpoint changes here.
 ROBOT="${ROBOT:-rebot}"
+
+# The dataset the checkpoint was TRAINED on, read out of the checkpoint rather than hardcoded.
+# It supplies the normalisation stats, and the wrong ones do not error: STATE and ACTION are
+# MEAN_STD, so mismatched stats silently rescale every action and the arm moves plausibly but
+# wrongly, which is indistinguishable from a failed transfer. v1 trained on zero/cross and v2 on
+# zero/crossv2, and this script used to name v1's unconditionally.
+if [ -f "$CKPT/train_config.json" ]; then
+  read -r _rid _root <<<"$(python3 -c "
+import json,sys
+c=json.load(open('$CKPT/train_config.json'))['dataset']
+print(c.get('repo_id',''), c.get('root',''))
+" 2>/dev/null)"
+  REPO_ID="${REPO_ID:-$_rid}"
+  DATASET_ROOT="${DATASET_ROOT:-$_root}"
+fi
+REPO_ID="${REPO_ID:-zero/cross}"
+DATASET_ROOT="${DATASET_ROOT:-$HOME/zero_data/cross_base}"
 
 if [ ! -d "$CKPT" ]; then
   echo "ERROR: checkpoint dir not found: '$CKPT'" >&2
@@ -45,23 +73,33 @@ source "$WS/install/setup.bash"
 # interpreter does not process. That also means node edits apply without a colcon build.
 export PYTHONPATH="$WS/src/ZERO/zero_control:${PYTHONPATH:-}"
 
-# The X button comes from /joy, published by the `joy` driver, not by zero_control's teleop node.
-# rebot_teleop.launch.py starts both, so using it here would leave teleop publishing
-# /zero/eef_target at 50 Hz and holding the home pose, which overrides every policy command (the
-# policy asked for 162 mm and the arm moved 2.3 mm). So start joy_node alone, and only if nothing
-# is already publishing /joy. autorepeat_rate matches the teleop launch: joy_node otherwise
-# publishes only on change, so a button press can be missed.
-if ! ros2 topic info /joy 2>/dev/null | grep -q "Publisher count: [1-9]"; then
-  echo "starting joy_node (nothing is publishing /joy)"
-  ros2 run joy joy_node --ros-args \
-    -p deadzone:=0.05 -p autorepeat_rate:=50.0 -p coalesce_interval_ms:=5 &
-  JOY_PID=$!
-  # Not a trap plus exec: `exec` replaces this shell, so the trap is discarded and Ctrl-C never
-  # runs it, which leaked five joy_node processes over one debugging session. Run the node as a
-  # child instead and clean up after it returns.
-  sleep 2
+# No gamepad by default: policy_node's `autostart` sets running=True at construction, and its
+# /joy subscription simply never fires when nothing publishes, so the joystick is not needed to
+# run a policy. Ctrl-C stops it.
+#
+# JOY=1 restores the button. The X button comes from /joy, published by the `joy` driver, not by
+# zero_control's teleop node. rebot_teleop.launch.py starts both, so using that launch here would
+# leave teleop publishing /zero/eef_target at 50 Hz and holding the home pose, which overrides
+# every policy command (the policy asked for 162 mm and the arm moved 2.3 mm). So start joy_node
+# alone, and only if nothing is already publishing /joy. autorepeat_rate matches the teleop
+# launch: joy_node otherwise publishes only on change, so a button press can be missed.
+if [ -n "${JOY:-}" ]; then
+  AUTOSTART=false
+  if ! ros2 topic info /joy 2>/dev/null | grep -q "Publisher count: [1-9]"; then
+    echo "starting joy_node (nothing is publishing /joy); press X to start the policy"
+    ros2 run joy joy_node --ros-args \
+      -p deadzone:=0.05 -p autorepeat_rate:=50.0 -p coalesce_interval_ms:=5 &
+    JOY_PID=$!
+    # Not a trap plus exec: `exec` replaces this shell, so the trap is discarded and Ctrl-C never
+    # runs it, which leaked five joy_node processes over one debugging session. Run the node as a
+    # child instead and clean up after it returns.
+    sleep 2
+  else
+    echo "/joy already has a publisher, reusing it; press X to start the policy"
+  fi
 else
-  echo "/joy already has a publisher, reusing it"
+  AUTOSTART=true
+  echo "no gamepad: the policy starts immediately (set JOY=1 to require X instead)"
 fi
 
 # Anything publishing /zero/eef_target will fight the policy for the arm; the node itself also
@@ -74,17 +112,19 @@ if ros2 node list 2>/dev/null | grep -q '^/zero_teleop$'; then
   exit 1
 fi
 
-cleanup() { [ -n "${JOY_PID:-}" ] && kill "$JOY_PID" 2>/dev/null; pkill -f 'lib/joy/joy_node' 2>/dev/null; true; }
+cleanup() { [ -n "${JOY_PID:-}" ] && kill "$JOY_PID" 2>/dev/null; true; }
 trap cleanup EXIT INT TERM
 
 /home/sid/lerobot_env/bin/python -m zero_control.policy_node --ros-args \
   --params-file "$WS/install/zero_bringup/share/zero_bringup/config/${ROBOT}_control.yaml" \
   -p checkpoint:="$CKPT" \
-  -p repo_id:=zero/cross \
-  -p dataset_root:="$HOME/zero_data/cross_base" \
+  -p repo_id:="$REPO_ID" \
+  -p dataset_root:="$DATASET_ROOT" \
   -p n_action_steps:="$STEPS" \
+  -p autostart:="$AUTOSTART" \
   ${SHADOW:+-p camera_ns:="/shadow"} \
   ${TRACE:+-p trace_path:="$TRACE"} \
   ${DUMP:+-p frame_dump_dir:="$DUMP"} \
   ${DUMP_EVERY:+-p frame_dump_every:="$DUMP_EVERY"} \
-  ${DUMP_MAX:+-p frame_dump_max:="$DUMP_MAX"}
+  ${DUMP_MAX:+-p frame_dump_max:="$DUMP_MAX"} \
+  "$@"

@@ -10,6 +10,7 @@
   <visual>
     <global offwidth="1280" offheight="720"/>
     <headlight ambient="0.22 0.22 0.22" diffuse="0.28 0.28 0.28" specular="0.08 0.08 0.08"/>
+    <map znear="0.007"/>
   </visual>
 
   <default>

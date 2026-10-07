@@ -104,6 +104,30 @@ SCENE_CAMS = {
 }
 WRIST_CAM_FOVY = 70          # wide: the object is only ~10 cm from the lens
 
+# Near clipping plane, as a FRACTION of the model extent (MuJoCo multiplies the two). On a wrist
+# camera the plane does two jobs at once: it hides the gripper's own casting, which sits ~14 mm in
+# front of the lens, and it can also clip away the object being grasped.
+#
+# THIS MUST MATCH WHAT THE 82 EPISODES WERE RECORDED WITH, which is MuJoCo's default 0.010. That
+# is not a preference, it is the training distribution. Verified by decoding the recorded
+# left_wrist video and rendering zero_rebot.xml at the same pose with only znear varied:
+#     0.007 -> 18.6 mm : mean |pixel diff| vs the training frame = 37.8
+#     0.010 -> 26.5 mm : mean |pixel diff| vs the training frame =  6.4   <- what was recorded
+#     0.015 -> 39.8 mm : mean |pixel diff| vs the training frame =  6.4
+# At 0.010 the plane cuts the gripper casting away and the wrist view contains only the two wedge
+# tips, which is what every training frame shows. At 0.007 the casting is no longer clipped and a
+# broad grey gripper body appears in every frame, which appears in NO training image.
+#
+# 0.007 was previously chosen here to raise can coverage at the vx300s grasp from 0.1% to 78.9%,
+# matching the 78.4% measured in the training video at that moment. That measurement was right
+# but incomplete: it checked the grasp instant and never checked the approach, and it was taken on
+# the vx300s giving camera, whose 50 mm standoff is what clipped the can in the first place. The
+# reBot at its 100 mm standoff sees the can perfectly well at 0.010 -- the recorded video proves
+# it. So a camera that cannot see the object has to be moved, not compensated for by opening the
+# near plane on every robot at once and desynchronising them all from the data.
+CAM_ZNEAR = 0.010
+
+
 # Task objects whose live pose is exported as a ros2_control state interface. Named here because
 # gen_scene writes the MJCF framepos/framequat pair and gen_urdf writes the matching <sensor>, and
 # the two must agree; mujoco_ros2_control derives the MJCF names as <name>_pos and <name>_quat.
@@ -441,7 +465,26 @@ ROBOTS = {
         #           10.5% can coverage against 0.0% before and the reBot's 9.0% when it succeeds.
         # Do not collapse these back to one value: 0.025 is blind at the handover and 0.050 is
         # blind at the grasp, and the task needs both.
-        "wrist_cam_pos": {"left": (0.0250, 0.0, 0.0200), "right": (0.0500, 0.0, 0.0200)},
+        # Both sides at 0.050. Two constraints bracket this, and they leave almost no room.
+        #
+        # Pulling BACK buries the lens in the gripper's own casting. With the can grasped at the
+        # tool point, the giving camera renders, as (can / robot body / rest of scene):
+        #     x=0.020, 82 mm standoff:   0.7% / 98.8% / 0.6%
+        #     x=0.025, 78 mm standoff:   0.0% / 100.0% / 0.0%
+        #     x=0.035, 68 mm standoff:   0.0% / 100.0% / 0.0%
+        #     x=0.050, 54 mm standoff:  44.4% / 50.1% / 5.5%
+        # At 0.025 the frame is entirely the robot looking at itself. The reBot gets away with 90 mm
+        # because its tool point sits at the fingertips; the vx300s pinch site is mid-finger, so the
+        # same standoff puts the lens behind the casting.
+        #
+        # Pushing FORWARD used to fail too, which is why these were briefly split with the left at
+        # 0.025. That was NOT a standoff problem:
+        # the near clipping plane sat at 26.5 mm (see L.CAM_ZNEAR) and the can's near surface sits
+        # 20.9 mm from a lens 54 mm behind the tool, so the front of the can was clipped away and
+        # what remained was its far wall as a floating band. With the plane at 5.3 mm the same
+        # camera renders 44.4%. The right camera never showed it because it only meets the can at
+        # the handover, 70 to 150 mm out, which no near plane reaches.
+        "wrist_cam_pos": (0.0500, 0.0, 0.0200),
         "wrist_cam_xyaxes": (0, 1, 0, 0, 0, -1),
         # Swept on THREE gates: replay residual on episode 0's recorded poses, whether an arm base
         # ends up inside the task furniture, and ORIENTATION residual on the giving arm during the
