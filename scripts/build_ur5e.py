@@ -1,26 +1,6 @@
 """Build the bimanual UR5e + Robotiq 2F-85 scene, writing the MJCF and URDF directly.
 
     MUJOCO_GL=egl python3 scripts/build_ur5e.py
-
-Deliberately standalone: it does NOT import zero_layout, and `ur5e` is not a registry entry, so
-nothing in gen_scene/gen_urdf/check_parity touches the files this writes. The flip side is that
-nothing checks them either, so the asserts at the end of this file are the only guard that the MJCF
-and the URDF still agree about joint names.
-
-Why the UR5e at all: the vx300s cannot mount a wrist camera anywhere good. Its pinch site is
-mid-finger, so a reBot-like 90 mm standoff buries the lens in the gripper casting (100% of the
-frame is the robot), while the only clear mount at 54 mm puts a grasped object 21 mm from the lens.
-The 2F-85's fingers are long enough that the tool point sits out near the fingertips like the
-reBot's, which is the geometry that makes a standoff exist at all.
-
-Two changes are made to the upstream assets:
-
-  * menagerie drives the 2F-85 from a TENDON actuator over both driver joints. eef_control_node
-    sends a per-joint position command, so that is replaced with a position servo on the left
-    driver joint. The gripper already ships a joint equality coupling the two drivers, so the right
-    one follows without any extra plumbing.
-  * the table is widened. Two UR5e's need ~1.2 m between bases to meet in the middle, against the
-    reBot's 0.9 m, and the stock 1.4 m table leaves the bases hanging off the edge.
 """
 
 from __future__ import annotations
@@ -34,7 +14,7 @@ import shutil
 import mujoco
 import numpy as np
 
-ROOT = Path("/home/sid/projects25/src/ZERO")
+ROOT = Path("~/projects25/src/ZERO")
 # Which gripper this UR5e wears. Two variants on purpose, so the pair is a controlled ablation:
 # same arm, same IK, same controllers, same table, and ONLY the end effector differs. That isolates
 # how much of the cross-embodiment gap is the gripper rather than the arm.
@@ -149,8 +129,8 @@ URDF_MOUNT_LINK = "tool0"
 # the two descriptions 1.59 m apart, with the telltale that z agrees to 1.5 mm while x is
 # sign-flipped. The URDF mount carries the same yaw so the TF tree and the simulation agree.
 URDF_MOUNT_YAW = np.pi
-MESH_OUT = Path("/home/sid/projects25/src/ZERO/zero_description/meshes/ur5e")
-MEN = Path("/home/sid/.cache/robot_descriptions/mujoco_menagerie")
+MESH_OUT = Path("~/projects25/src/ZERO/zero_description/meshes/ur5e")
+MEN = Path("~/.cache/robot_descriptions/mujoco_menagerie")
 ARM_XML = MEN / "universal_robots_ur5e" / "ur5e.xml"
 GRIP_XML = {"robotiq": MEN / "robotiq_2f85" / "2f85.xml",
             "rebot": ROOT / "robots" / "shared_gripper" / "rebot_gripper.xml"}[VARIANT]

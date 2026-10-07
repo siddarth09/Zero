@@ -1,13 +1,4 @@
-"""Assert the URDF, the MJCF and the controller config agree on joint names.
-
-Run after any change to either description. mujoco_ros2_control matches joints by name across
-`/robot_description` (URDF) and `/mujoco_robot_description` (MJCF). A mismatch does not raise:
-the joints that do match keep working, so it shows up as "the arm moves but the gripper does
-nothing". That happened once already, because menagerie names the gripper joints
-`joint_left`/`joint_right` and Seeed's official URDF calls them `gripper_joint1`/`gripper_joint2`.
-
-Exit code 0 = consistent, 1 = drift, so it can gate a build.
-"""
+"""Assert the URDF, the MJCF and the controller config agree on joint names."""
 
 from __future__ import annotations
 

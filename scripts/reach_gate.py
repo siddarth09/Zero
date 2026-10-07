@@ -32,7 +32,7 @@ import mujoco
 
 import zero_layout as L
 
-G1_XML = "/home/sid/mujoco_menagerie/unitree_g1/g1_with_hands.xml"
+G1_XML = "~/mujoco_menagerie/unitree_g1/g1_with_hands.xml"
 VOXEL = 0.04            # 4 cm, matching the earlier handover reachability study
 N_SAMPLES = 60_000      # per arm
 SLAB = 0.25             # task volume height above the table top

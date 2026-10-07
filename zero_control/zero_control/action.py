@@ -2,27 +2,6 @@
 
     per hand:  pos(3) + rot6d(6) + grip(1)  = 10
     both hands:                              20
-
-This lives in SE(3) x R. `pos` is the translation in R^3; `rot6d` encodes the SO(3) rotation as
-the first two columns of the rotation matrix, re-orthonormalised on read; `grip` is a normalised
-[0,1] open/close scalar and is not part of SE(3) at all.
-
-rot6d rather than a quaternion or Euler angles, because both minimal parameterisations of SO(3)
-are discontinuous: quaternions double-cover (q and -q are the same rotation, so a regression
-target flips sign arbitrarily) and Euler angles gimbal-lock. rot6d is deliberately
-over-parameterised, 9 numbers for 6 DoF, to stay continuous everywhere, which is what a network
-needs to regress against. (Zhou et al. 2019, On the Continuity of Rotation Representations in
-Neural Networks.)
-
-Absolute, not deltas. Poses are absolute in the world/table frame, so nothing drifts and a
-recorded demo means the same thing on any robot. Gamepad input is naturally a delta; integrating
-delta to absolute happens in the teleop node, never in the dataset.
-
-This is the transfer mechanism. reBot (6-DoF + parallel jaw), Panda (7-DoF + Robotiq 2F-85) and G1
-(7-DoF + 3-finger hand) share no joint space. They share this. The identical 20-vector goes into
-each robot's own IK and comes out as a completely different joint trajectory, and that one swap
-is the whole of cross-embodiment here. It is also why joint positions must never enter the
-policy's observation: the moment they do it stops transferring.
 """
 
 from __future__ import annotations

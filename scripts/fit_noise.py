@@ -1,6 +1,6 @@
 """Fit the correlated-noise Cholesky factor from a recorded dataset.
 
-    /home/sid/lerobot_env/bin/python scripts/fit_noise.py [DATASET_ROOT] [CHUNK] [BETA] [OUT]
+    $HOME/lerobot_env/bin/python scripts/fit_noise.py [DATASET_ROOT] [CHUNK] [BETA] [OUT]
 
 Builds every length-CHUNK window of every episode, computes their covariance, and saves the
 Cholesky factor. Windows do not cross episode boundaries: a chunk spanning the end of one demo and

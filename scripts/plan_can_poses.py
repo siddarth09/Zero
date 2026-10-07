@@ -34,7 +34,7 @@ import zero_layout as L
 from zero_control.action import rot_from_6d
 from zero_control.ik import ArmIK
 
-G1_XML = "/home/sid/mujoco_menagerie/unitree_g1/g1_with_hands.xml"
+G1_XML = "~/mujoco_menagerie/unitree_g1/g1_with_hands.xml"
 G1_PALM = {"right": (0.1152, 0.0845, -0.0024)}
 G1_BASE = np.array([0.75, 0.0, 0.79])          # pelvis, yaw 180; reach_gate.py's verdict
 GRID = 0.04

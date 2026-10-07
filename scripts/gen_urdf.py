@@ -2,14 +2,6 @@
 
     python scripts/gen_urdf.py rebot
     python scripts/gen_urdf.py panda
-
-Neither source URDF has a xacro macro or prefix support, so two copies collide on every link and
-joint name. Generating means no hand-maintained duplication, it is re-runnable when upstream
-changes, and the mount poses, joint names and camera names all come from `zero_layout`, the same
-module the MJCF generator uses, so the two descriptions cannot drift.
-`scripts/check_parity.py <robot>` asserts they have not.
-
-Out:  zero_description/urdf/zero_<robot>.urdf
 """
 
 from __future__ import annotations
@@ -183,7 +175,7 @@ def add_ros2_control(robot: ET.Element, key: str) -> None:
     # straight to the MuJoCo loader and dies with "MuJoCo model file 'package://...' does not exist!".
     # xacro expands $(find pkg) into an absolute path before the plugin sees it, so the launch must
     # pipe this URDF through xacro. That is how Panda_mujoco does it, and it beats baking in
-    # /home/sid/... which breaks the moment the project moves.
+    # $HOME/... which breaks the moment the project moves.
     ET.SubElement(hw, "param", {"name": "mujoco_model"}).text = (
         f"$(find zero_description)/mjcf/zero_{key}.xml")
     # Faster-than-realtime stepping, for data collection and eval sweeps.

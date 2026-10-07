@@ -2,14 +2,6 @@
 
     MUJOCO_GL=egl python scripts/gen_scene.py rebot
     MUJOCO_GL=egl python scripts/gen_scene.py panda
-
-One generator for every robot. The cross-embodiment chain is reBot -> Panda -> G1, and the study
-only means anything if the task is identical across embodiments: same table, same object
-position, same camera poses, same look-at point. A per-robot script would let those drift.
-Everything shared comes from `zero_layout`; only what genuinely differs (joint names, reach,
-mount separation, home pose, aperture) lives in the per-robot registry entry.
-
-Out:  zero_description/mjcf/zero_<robot>.xml  +  scenes/<robot>_cameras.png
 """
 
 from __future__ import annotations

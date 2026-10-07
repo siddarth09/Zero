@@ -1,21 +1,4 @@
-"""Damped-least-squares SE(3) IK for one arm of a dual-arm ZERO robot, via pinocchio.
-
-DLS rather than a planner. The policy emits an end-effector pose every control tick, each a
-small increment on the last, so this is servoing: one local Jacobian solve per tick, a few
-hundred microseconds. A motion planner (MoveIt/OMPL) would take 100 ms to seconds and would
-discard the trajectory the policy learned, keeping only its endpoint, and the trajectory is what
-a demo-trained policy knows.
-
-Damped, because the reBot is 6-DoF driving a 6-DoF task: no redundancy, so J is square and goes
-singular at workspace edges and elbow-lock, where a plain pseudo-inverse produces enormous dq.
-The damping term trades a little tracking accuracy for bounded joint velocity. Panda is 7-DoF,
-so J is wide and DLS additionally picks the minimum-norm solution, which keeps the null-space
-(elbow) from drifting between otherwise identical poses.
-
-Always read `residual`. A pose the arm physically cannot reach returns a large residual and a
-clamped dq; it does not raise. If that is not logged, an unreachable target looks exactly like
-"the policy failed".
-"""
+"""Damped-least-squares SE(3) IK for one arm of a dual-arm ZERO robot, via pinocchio."""
 
 from __future__ import annotations
 

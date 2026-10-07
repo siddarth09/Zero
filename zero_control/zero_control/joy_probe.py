@@ -1,12 +1,6 @@
 """Print which gamepad control you just moved, so the teleop map can be verified not assumed.
 
     ros2 run zero_control joy_probe
-
-joy_node reports this pad as an "Xbox 360 Controller" and the resting axes match XInput exactly
-(8 axes, 11 buttons, axes 2 and 5 resting at +1 = the analog triggers), so the defaults in
-teleop.yaml should be right. But clones differ on signs more often than on indices, and a
-flipped sign is not obvious from a static dump; it just makes the arm go the wrong way once you
-are driving. This names each control as it moves, with its live value.
 """
 
 from __future__ import annotations

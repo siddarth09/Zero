@@ -1,12 +1,4 @@
-"""Shared layout constants for project ZERO's bimanual reBot workstation.
-
-The URDF and the MJCF are two independent descriptions of the same robot, and
-`mujoco_ros2_control` binds them together by joint name across two topics
-(`/robot_description` for the URDF, `/mujoco_robot_description` for the MJCF). If the names or
-the mount poses drift apart nothing throws: the plugin reports "Joint '%s' not found in the URDF
-joint data" for the lucky cases and ignores the rest, so a gripper can end up never moving while
-everything looks fine. Both generators import from here so drift is impossible.
-"""
+"""Shared layout constants for project ZERO's bimanual reBot workstation."""
 
 from __future__ import annotations
 
@@ -162,7 +154,7 @@ def all_cameras() -> list[str]:
 CAM_NS = "/zero"
 
 
-ROBOCASA = Path("/home/sid/projects25/src/robocasa/robocasa/models/assets/objects/lightwheel")
+ROBOCASA = Path("~/projects25/src/robocasa/robocasa/models/assets/objects/lightwheel")
 # An upright can, and specifically a uniform cylinder. Two separate requirements:
 #
 #   Height. The original lemon wedge lies flat, 23 mm tall with its grasp centre ~11 mm off the
@@ -362,7 +354,7 @@ ROBOTS = {
     # with an <equality> coupling the pair, so ros2_control can command it by name, unlike
     # menagerie's Panda (tendon) and Robotiq (tendon).
     "vx300s": {
-        "mjcf": Path("/home/sid/.cache/robot_descriptions/mujoco_menagerie/"
+        "mjcf": Path("~/.cache/robot_descriptions/mujoco_menagerie/"
                      "trossen_vx300s/vx300s.xml"),
         "arm_joints": ("waist", "shoulder", "elbow", "forearm_roll", "wrist_angle",
                        "wrist_rotate"),

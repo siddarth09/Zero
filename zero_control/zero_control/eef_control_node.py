@@ -1,35 +1,6 @@
 """ZERO end-effector control node: SE(3) targets -> joint commands, for any embodiment.
 
     ros2 run zero_control eef_control --ros-args -p robot:=rebot
-
-SUBSCRIBES
-    /joint_states            sensor_msgs/JointState      current configuration
-    /zero/eef_target         Float64MultiArray[20]       the action: per hand pos3+rot6d+grip1
-PUBLISHES
-    /{side}_arm_controller/commands      Float64MultiArray   joint positions
-    /{side}_gripper_controller/commands  Float64MultiArray   joint positions
-    /zero/ik_status                      Float64MultiArray[6]  see below
-
-One node, every robot. Nothing here is reBot- or Panda-specific: joint names, EEF frame, gripper
-range and URDF all come from `zero_layout.ROBOTS[robot]`. If the source and target embodiments
-ran different control code, an implementation difference could masquerade as a transfer result,
-and the transfer number is the point of the project.
-
-/zero/ik_status is not optional: [left_pos_err, left_rot_err, left_clamped, right_pos_err,
-right_rot_err, right_clamped]. An unreachable target does not raise. IK returns a large residual
-and a clamped step, the arm stalls short, and it looks exactly like the policy failing. On the
-previous project that misdiagnosis cost days, because a closest-approach distance pinned at the
-same value across every hyperparameter was read as a learning problem. Log it, always.
-
-Startup holds home, not the measurement. Until a target arrives the node commands the `home`
-configuration from the registry. Commanding the measured configuration looks safer, since it
-cannot snap on launch, but it creeps: a position command equal to where the arm already is
-exerts no restoring force, so gravity pulls it a little further every tick and the sagged pose
-becomes the next command. That gave a monotonic 0.64 -> 0.70 rad drift from home over 45 s with
-no equilibrium, and an EEF target computed from the home keyframe was then 574 mm from a right
-arm that had quietly crept away, which reads like an IK or controller fault (the solver, the
-joint limits and the MuJoCo closed loop all tested clean in isolation). Holding a fixed
-reference also makes the start pose repeatable across episodes, which the dataset needs.
 """
 
 from __future__ import annotations

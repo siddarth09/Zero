@@ -1,6 +1,6 @@
 """Merge the good episodes of both recordings into one dataset.
 
-    /home/sid/lerobot_env/bin/python scripts/merge_cross.py
+    $HOME/lerobot_env/bin/python scripts/merge_cross.py
 
 The second recording session went into `rebot_pick_place` rather than `cross_v1`, so the good
 episodes ended up split across two datasets. `rebot_pick_place` also still holds 60 episodes

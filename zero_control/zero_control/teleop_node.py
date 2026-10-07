@@ -4,31 +4,6 @@
     ros2 run zero_control teleop --ros-args \
         --params-file install/zero_bringup/share/zero_bringup/config/rebot_control.yaml \
         --params-file install/zero_bringup/share/zero_bringup/config/teleop.yaml
-
-Velocity in, absolute pose out. The recorded action is an absolute pose in the table frame
-(action.pack), because that is what makes it portable across embodiments; a joint delta means
-nothing to a different arm. But a stick is a velocity device: it reports "keep going", not "be
-here". So this node holds the target pose as state and integrates the sticks into it. Publishing
-raw stick deltas as if they were poses would command a 2 mm move per tick from wherever the arm
-happens to be, which drifts differently on every robot.
-
-Dead-man select. LB moves the left arm, RB the right; with neither held nothing moves. One
-button doing both jobs is deliberate: an integrator with no dead-man keeps accumulating stick
-noise while you are looking at the screen, and the arm creeps. It also makes "which arm am I
-driving" unambiguous, which a mode toggle does not.
-
-Orientation is yaw-only. The home poses are solved to aim the gripper down at the table, and
-top-down pick/handover/place needs no roll or pitch. Full 6-DoF on a gamepad mostly produces
-demos with the wrist at a random angle. The published action is still the full SE(3) plus grip;
-roll and pitch simply stay where the home pose put them.
-
-Grippers latch. Y toggles the selected arm's gripper closed, and it stays closed until Y is
-pressed again. The first version mapped the opening directly to the analog trigger, which reads
-well on paper (squeeze harder, grip harder) and is wrong for this task: the operator has to hold
-the trigger for the entire carry, and the grip is only ever as steady as their finger. Any slip,
-or letting go to reach for another control, drops the object mid-demo. A latch makes "closed" a
-state rather than a continuous effort. Set `grip_axis` in teleop.yaml to re-enable the analog
-mapping.
 """
 
 from __future__ import annotations

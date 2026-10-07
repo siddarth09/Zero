@@ -2,21 +2,6 @@
 
     python scripts/gen_bringup.py rebot
     python scripts/gen_bringup.py panda
-
-Controller choice: `position_controllers/JointGroupPositionController`, not
-JointTrajectoryController. JTC is for planned trajectories: it interpolates to a goal and a new
-goal preempts the old one, which fights a teleop loop streaming a fresh target every tick.
-JointGroupPositionController takes a raw Float64MultiArray of positions, which is what a teleop
-or IK node publishes. Same pattern as siddarth09/Panda_mujoco, already proven under
-mujoco_ros2_control.
-
-Four controllers, not two: one arm plus one gripper per side. The arms are independent kinematic
-chains, so a single controller spanning both would force joint planning, and a gripper sharing a
-controller with its arm cannot be commanded while the arm is moving.
-
-Gripper joints are per actuator, from the registry: the reBot has two real gripper actuators
-(plus an <equality> coupling the fingers) so both are listed; Panda has one actuator driving both
-fingers, so only `finger_joint1` is. Copying either pattern to the other robot is wrong.
 """
 
 from __future__ import annotations

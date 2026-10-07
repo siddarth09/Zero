@@ -1,24 +1,4 @@
-"""The 14-dim tool-frame force observation, shared by the recorder and the policy.
-
-This exists so there is exactly one implementation. The recorder writes this vector into the
-dataset and the policy reads it at inference, and if the two ever computed it differently the model
-would be fed a quantity it was never trained on, silently and with no error anywhere. Two copies of
-this arithmetic in two nodes is that bug waiting to happen.
-
-Per hand, 7 numbers:
-
-    net wrench (6)  the sum of the finger wrenches, rotated into the tool frame. This is the
-                    external load: the object's weight, or the gripper pressing on something. On a
-                    symmetric pinch it is near zero because the pads cancel.
-    squeeze (1)     the mean of the per-finger force magnitudes, divided by this robot's own
-                    grip-force cap. Grip strength, which the sum destroys: gripping the can reads
-                    15.6 N and 14.5 N on the two pads, so the sum is ~1 N and the mean is ~15 N.
-
-Sum and mean are both defined for any number of fingers, so a two-finger jaw and a three-finger
-hand present the same 7 numbers. Normalising by the robot's own cap is what makes squeeze
-comparable across embodiments, and is why the cap must come from the generated config rather than
-being hard-coded.
-"""
+"""The 14-dim tool-frame force observation, shared by the recorder and the policy."""
 
 from __future__ import annotations
 

@@ -1,31 +1,4 @@
-"""Render the SOURCE robot doing what the TARGET robot is doing.
-
-The policy was trained on reBot pixels. Driving a vx300s with it works up to the handover: pick,
-carry and approach all succeed, but the receiving hand never closes, because the frames it is
-reading show a vx300s gripper where it learned a reBot one. Cross-painting (Mirage, arXiv
-2402.19249) exists for exactly this: replace the target robot in the image with the source robot at
-the same end-effector pose, so the policy sees the embodiment it was trained on.
-
-In simulation there is nothing to inpaint. Instead of masking the target out and filling the hole,
-this holds a second, headless MuJoCo model of the reBot, drives it to the target's measured EEF
-poses, and renders its cameras directly. No segmentation, no generative infill, no artifacts.
-
-Mirage assumes source and target are interchangeable at the same base pose. Two table-mounted arms
-satisfy that. The G1 does not (its arms hang off a torso beside the table), which is why
-research/README.md demotes the technique for that embodiment and not for this one.
-
-Subscribes:
-    /zero/eef_state      Float64MultiArray[20]   the target's measured pose, per hand pos3+rot6d+grip1
-Publishes:
-    {ns}/{camera}/image_raw   Image(rgb8)        what the reBot would see in the same situation
-
-The can's pose is tracked rather than measured. mujoco_ros2_control's 'pose' sensor type would
-export it, but the installed build (/opt/ros/jazzy) does not implement that type, only the newer
-source tree does, and swapping the plugin the whole stack runs on is not worth one object's pose.
-So: the can sits at the launch position until the giving hand closes on it, then rides with that
-hand's tool point. That is exact for this task, whose only object motion is the carry, and wrong
-only if something knocks the can without holding it.
-"""
+"""Render the SOURCE robot doing what the TARGET robot is doing."""
 
 from __future__ import annotations
 

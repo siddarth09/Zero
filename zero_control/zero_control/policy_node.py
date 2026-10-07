@@ -1,34 +1,6 @@
 """Trained checkpoint -> /zero/eef_target. The teleop node's slot, driven by the policy.
 
     bash scripts/run_policy.sh [CHECKPOINT] [N_ACTION_STEPS]
-
-The topology is unchanged from teleoperation: this node publishes the same 20-dim absolute
-SE(3)+grip target the gamepad did, and `eef_control_node` still owns all the IK. Swapping the
-operator for a policy therefore touches nothing else in the stack. X toggles run/stop, as in the
-recorder.
-
-Runs under lerobot_env because the checkpoint needs torch 2.12+cu128 (sm_120) and lerobot 0.5.1,
-which live in /home/sid/lerobot_env. That venv is built with `include-system-site-packages =
-false`, so run_policy.sh prepends ROS's site-packages to PYTHONPATH. rclpy imports cleanly
-against the venv's numpy 2.4.4, and images are decoded with np.frombuffer so cv_bridge is never
-needed.
-
-It does not compute its own FK. ROS's pinocchio is compiled against numpy 1.x and refuses to
-load under numpy 2.4.4, so this node cannot run ArmIK at all. Instead `eef_control_node`
-publishes the measured 20-dim observation on /zero/eef_state. That is the better design
-regardless: the controller already does this FK every tick, so there is one source of kinematic
-truth rather than a second implementation that could drift from the one the dataset was recorded
-with.
-
-One fidelity detail matters. `observation.state` grip channels are the last commanded grip, not
-a sensor reading (`record_node._measured_state` reads `self.action[9]` / `[19]`). That is
-reproduced inside `eef_control_node._publish_state`, so what arrives here already matches what
-the policy trained on. Images are RGB in [0,1] CHW, matching the recorder's bgr8 -> RGB flip.
-
-`eef_control_node` does not clamp targets to a workspace box; an unreachable target just makes
-the arm stall short with a large IK residual (its own docstring warns this "looks exactly like
-the policy"). This node watches /zero/ik_status and warns, so a kinematic stall is not misread
-as a policy failure.
 """
 
 from __future__ import annotations
