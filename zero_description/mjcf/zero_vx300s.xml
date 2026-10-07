@@ -230,7 +230,7 @@
                   <geom class="left_collision" pos="-0.020175 0 0" quat="0.707107 0 0 0.707107" mesh="left_vx300s_9_gripper_bar"/>
                   <site name="left_pinch" pos="0.1 0 0" group="4" rgba="0.6 0.3 0.3 1"/>
                   <site name="left_eef" pos="0.1 0 0" size="0.008" group="4"/>
-                  <camera name="left_wrist" pos="0.025 0 0.02" quat="0.5 -0.5 -0.5 0.5" resolution="224 224" fovy="70"/>
+                  <camera name="left_wrist" pos="0.05 0 0.02" quat="0.5 -0.5 -0.5 0.5" resolution="224 224" fovy="70"/>
                   <body name="left_gripper_prop_link" pos="0.0485 0 0" gravcomp="1">
                     <inertial pos="0.002378 2.85e-08 0" quat="0 0 0.897698 0.440611" mass="0.008009" diaginertia="4.2979e-06 2.8868e-06 1.5314e-06"/>
                     <geom class="left_visual" pos="-0.0685 0 0" quat="0.707107 0 0 0.707107" material="left_black" mesh="left_vx300s_8_gripper_prop"/>

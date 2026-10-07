@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!-- Extracted from zero_description/urdf/zero_rebot.urdf by hand, once.
+     The vendor source (~/rebotarm_ros2/.../00-arm-rs_asm-v3.urdf) is no longer on this machine,
+     so the generated reBot URDF is the only surviving description of this gripper. Names are
+     unprefixed so build_ur5e._prefixed can apply "{side}_rg_" and match the MJCF graft. -->
+<robot name="rebot_gripper">
+  <material name="rs_seeed_green">
+    <color rgba="0.725 0.835 0.118 1" />
+  </material>
+  <material name="rs_pla_black">
+    <color rgba="0.090 0.106 0.102 1" />
+  </material>
+  <material name="rs_motor_black">
+    <color rgba="0.045 0.052 0.049 1" />
+  </material>
+  <material name="rs_anodized_silver">
+    <color rgba="0.720 0.760 0.730 1" />
+  </material>
+  <link name="gripper_end">
+    <inertial>
+      <origin xyz="-0.112751692515958 0.000128443070436966 -5.72602449749882E-06" rpy="0 0 0" />
+      <mass value="0.65" />
+      <inertia ixx="0.00037354" ixy="-0.00000011" ixz="0.00000050" iyy="0.00015830" iyz="0.00000348" izz="0.00045353" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/pla7_green.STL" />
+      </geometry>
+      <material name="rs_seeed_green" />
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/cnc7.STL" />
+      </geometry>
+      <material name="rs_anodized_silver" />
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/motor_7.STL" />
+      </geometry>
+      <material name="rs_motor_black" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/gripper_end.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="gripper_left">
+    <inertial>
+      <origin xyz="-0.00218008703135955 0.0187090355934181 0.00932188568692145" rpy="0 0 0" />
+      <mass value="0.0752" />
+      <inertia ixx="1.09877964176176E-05" ixy="0" ixz="0" iyy="9.50146036720166E-06" iyz="0" izz="9.30779991911125E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/pla_left.STL" />
+      </geometry>
+      <material name="rs_pla_black" />
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/cnc_left.STL" />
+      </geometry>
+      <material name="rs_anodized_silver" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/gripper_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="gripper_right">
+    <inertial>
+      <origin xyz="0.00218008703135955 -0.018709035593418 0.00932188568692151" rpy="0 0 0" />
+      <mass value="0.0752" />
+      <inertia ixx="1.09877964176176E-05" ixy="0" ixz="0" iyy="9.50146036720166E-06" iyz="0" izz="9.30779991911125E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/pla_right.STL" />
+      </geometry>
+      <material name="rs_pla_black" />
+    </visual>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/cnc_right.STL" />
+      </geometry>
+      <material name="rs_anodized_silver" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://zero_description/meshes/gripper_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="gripper_joint1" type="prismatic">
+    <origin xyz="-0.041939 -7.3385E-05 0" rpy="1.5708 -1.5708 0" />
+    <parent link="gripper_end" />
+    <child link="gripper_left" />
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="0.05" effort="500" velocity="10" />
+  </joint>
+  <joint name="gripper_joint2" type="prismatic">
+    <origin xyz="-0.041939 7.3385E-05 0" rpy="-1.5708 -1.5708 0" />
+    <parent link="gripper_end" />
+    <child link="gripper_right" />
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="0.0715" effort="500" velocity="10" />
+  </joint>
+</robot>

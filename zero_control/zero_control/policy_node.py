@@ -42,6 +42,8 @@ from rclpy.node import Node
 from sensor_msgs.msg import Image, Joy
 from std_msgs.msg import Float64MultiArray
 
+from zero_control.force import ToolFrameForce
+
 from zero_control.action import DIM
 
 
@@ -111,6 +113,7 @@ class PolicyNode(Node):
         # what the cameras saw. Fires when the giving hand is closed and the two hands are close,
         # which is the moment the receiving hand has to decide.
         self.declare_parameter("camera_ns", "/zero")
+        ToolFrameForce.declare(self)
         self.declare_parameter("frame_dump_dir", "")
         self.declare_parameter("frame_dump_max", 24)
         # Dump every Nth tick as well as at the handover. A rollout that stalls before the hands
@@ -139,6 +142,19 @@ class PolicyNode(Node):
         for c in self.cams:
             self.create_subscription(Image, f"{cam_ns}/{c}/image_raw",
                                      lambda m, c=c: self._on_rgb(m, c), 10)
+        # Force is optional: a robot with no F/T sensors configured yields an empty list, and a v1
+        # checkpoint ignores the key anyway. A v2 checkpoint without it runs degraded, so log which.
+        self.force = ToolFrameForce(self) if self.get_parameter("ft_sensors").value != [""] else None
+        if self.force is None or not self.force.sensors:
+            self.force = None
+            self.get_logger().warn(
+                "no F/T sensors configured; observation.force will be absent. A v2 checkpoint "
+                "trained with force will run without one of its inputs.")
+        else:
+            self.get_logger().info(
+                f"force observation from {len(self.force.sensors)} F/T sensors, "
+                f"normalised by grip_force={self.force.grip_force:.1f} N")
+
         self.create_subscription(Float64MultiArray, "/zero/eef_state", self._on_state, 10)
         self.create_subscription(Float64MultiArray, "/zero/ik_status", self._on_status, 10)
         self.create_subscription(Joy, "/joy", self._on_joy, 10)
@@ -169,10 +185,34 @@ class PolicyNode(Node):
             f"{'RUNNING' if self.running else 'press X to start'}")
 
     # ------------------------------------------------------------------ policy
+    @staticmethod
+    def _register_zerovla() -> None:
+        """Teach LeRobot's factory about our policy type.
+
+        `factory.get_policy_class` is a hardcoded if/elif chain, so a checkpoint whose config says
+        `type: zerovla` cannot be loaded by stock LeRobot: it fails to parse its own checkpoint.
+        Importing the module registers the config subclass; replacing the module attribute covers
+        the class lookup. Same two lines as scripts/train_v2.py, for the same reason.
+        """
+        import lerobot.policies.factory as factory
+        from zero_control.v2.policy import ZeroVLAPolicy
+
+        if getattr(factory, "_zero_patched", False):
+            return
+        original = factory.get_policy_class
+
+        def get_policy_class(name: str):
+            return ZeroVLAPolicy if name == "zerovla" else original(name)
+
+        factory.get_policy_class = get_policy_class
+        factory._zero_patched = True
+
     def _load(self, ckpt: str):
         from lerobot.configs.policies import PreTrainedConfig
         from lerobot.datasets.dataset_metadata import LeRobotDatasetMetadata
         from lerobot.policies.factory import make_policy, make_pre_post_processors
+
+        self._register_zerovla()
 
         cfg = PreTrainedConfig.from_pretrained(ckpt)
         cfg.pretrained_path = ckpt
@@ -244,6 +284,11 @@ class PolicyNode(Node):
                 f"advancing anyway (stall #{self.stalls})")
         self.waiting_since = None
         batch = {"observation.state": torch.from_numpy(self.state).unsqueeze(0)}
+        if self.force is not None:
+            # The v2 policy trains on observation.force. Omitting it here does NOT raise: the key
+            # is simply absent, the force token is skipped, and the model silently runs on an input
+            # set it never saw. Publish it whenever the sensors exist.
+            batch["observation.force"] = torch.from_numpy(self.force.vector()).unsqueeze(0)
         for c in self.cams:
             img = self.rgb[c].astype(np.float32) / 255.0                  # HWC RGB [0,1]
             batch[f"observation.images.{c}"] = torch.from_numpy(

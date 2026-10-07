@@ -1,0 +1,541 @@
+<mujoco model="zero_ur5e">
+  <compiler angle="radian" meshdir="/home/sid/projects25/src/ZERO/zero_description/meshes/ur5e/" texturedir="/home/sid/projects25/src/ZERO/zero_description/meshes/ur5e/"/>
+
+  <size nkey="1"/>
+
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+    <headlight ambient="0.22 0.22 0.22" diffuse="0.28 0.28 0.28" specular="0.08 0.08 0.08"/>
+  </visual>
+
+  <default>
+    <default class="left_main">
+      <default class="left_ur5e">
+        <material shininess="0.25"/>
+        <joint range="-6.28319 6.28319" armature="0.1"/>
+        <site size="0.001 0.005 0.005" group="4" rgba="0.5 0.5 0.5 0.3"/>
+        <general ctrlrange="-6.2831 6.2831" forcerange="-150 150" biastype="affine" gainprm="2000" biasprm="0 -2000 -400"/>
+        <default class="left_size3">
+          <default class="left_size3_limited">
+            <joint range="-3.1415 3.1415"/>
+            <general ctrlrange="-3.1415 3.1415"/>
+          </default>
+        </default>
+        <default class="left_size1">
+          <general forcerange="-28 28" gainprm="500" biasprm="0 -500 -100"/>
+        </default>
+        <default class="left_visual">
+          <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+        </default>
+        <default class="left_collision">
+          <geom type="capsule" group="3"/>
+          <default class="left_eef_collision">
+            <geom type="cylinder"/>
+          </default>
+        </default>
+      </default>
+      <default class="left_rg_main">
+        <default class="left_rg_rg_seeed">
+          <joint armature="0.01" frictionloss="0.2"/>
+          <default class="left_rg_rg_visual">
+            <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+          </default>
+          <default class="left_rg_rg_collision">
+            <geom type="mesh" group="3"/>
+          </default>
+          <default class="left_rg_rg_rs06">
+            <joint damping="5"/>
+            <general forcerange="-36 36" biastype="affine" gainprm="900" biasprm="0 -900 -60"/>
+          </default>
+          <default class="left_rg_rg_rs00">
+            <joint damping="2"/>
+            <general forcerange="-14 14" biastype="affine" gainprm="120" biasprm="0 -120 -10"/>
+          </default>
+          <default class="left_rg_rg_gripper">
+            <joint damping="1"/>
+            <general forcerange="-1904 1904" biastype="affine" gainprm="5000" biasprm="0 -5000 -41.28"/>
+          </default>
+        </default>
+      </default>
+    </default>
+    <default class="right_main">
+      <default class="right_ur5e">
+        <material shininess="0.25"/>
+        <joint range="-6.28319 6.28319" armature="0.1"/>
+        <site size="0.001 0.005 0.005" group="4" rgba="0.5 0.5 0.5 0.3"/>
+        <general ctrlrange="-6.2831 6.2831" forcerange="-150 150" biastype="affine" gainprm="2000" biasprm="0 -2000 -400"/>
+        <default class="right_size3">
+          <default class="right_size3_limited">
+            <joint range="-3.1415 3.1415"/>
+            <general ctrlrange="-3.1415 3.1415"/>
+          </default>
+        </default>
+        <default class="right_size1">
+          <general forcerange="-28 28" gainprm="500" biasprm="0 -500 -100"/>
+        </default>
+        <default class="right_visual">
+          <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+        </default>
+        <default class="right_collision">
+          <geom type="capsule" group="3"/>
+          <default class="right_eef_collision">
+            <geom type="cylinder"/>
+          </default>
+        </default>
+      </default>
+      <default class="right_rg_main">
+        <default class="right_rg_rg_seeed">
+          <joint armature="0.01" frictionloss="0.2"/>
+          <default class="right_rg_rg_visual">
+            <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+          </default>
+          <default class="right_rg_rg_collision">
+            <geom type="mesh" group="3"/>
+          </default>
+          <default class="right_rg_rg_rs06">
+            <joint damping="5"/>
+            <general forcerange="-36 36" biastype="affine" gainprm="900" biasprm="0 -900 -60"/>
+          </default>
+          <default class="right_rg_rg_rs00">
+            <joint damping="2"/>
+            <general forcerange="-14 14" biastype="affine" gainprm="120" biasprm="0 -120 -10"/>
+          </default>
+          <default class="right_rg_rg_gripper">
+            <joint damping="1"/>
+            <general forcerange="-1904 1904" biastype="affine" gainprm="5000" biasprm="0 -5000 -41.28"/>
+          </default>
+        </default>
+      </default>
+    </default>
+  </default>
+
+  <asset>
+    <texture type="skybox" colorspace="auto" name="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" colorspace="auto" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texrepeat="5 5" reflectance="0.2"/>
+    <material name="table_mat" rgba="0.72 0.6 0.44 1"/>
+    <material name="leg_mat" rgba="0.25 0.25 0.28 1"/>
+    <material name="left_black" class="left_ur5e" rgba="0.033 0.033 0.033 1"/>
+    <material name="left_jointgray" class="left_ur5e" rgba="0.278 0.278 0.278 1"/>
+    <material name="left_linkgray" class="left_ur5e" rgba="0.82 0.82 0.82 1"/>
+    <material name="left_urblue" class="left_ur5e" rgba="0.49 0.678 0.8 1"/>
+    <material name="left_rg_rg_alum" specular="0.4" shininess="0.3" rgba="0.78 0.78 0.8 1"/>
+    <material name="left_rg_rg_lime" specular="0.4" shininess="0.3" rgba="0.72 0.85 0.2 1"/>
+    <material name="left_rg_rg_black" specular="0.4" shininess="0.3" rgba="0.05 0.05 0.06 1"/>
+    <material name="right_black" class="right_ur5e" rgba="0.033 0.033 0.033 1"/>
+    <material name="right_jointgray" class="right_ur5e" rgba="0.278 0.278 0.278 1"/>
+    <material name="right_linkgray" class="right_ur5e" rgba="0.82 0.82 0.82 1"/>
+    <material name="right_urblue" class="right_ur5e" rgba="0.49 0.678 0.8 1"/>
+    <material name="right_rg_rg_alum" specular="0.4" shininess="0.3" rgba="0.78 0.78 0.8 1"/>
+    <material name="right_rg_rg_lime" specular="0.4" shininess="0.3" rgba="0.72 0.85 0.2 1"/>
+    <material name="right_rg_rg_black" specular="0.4" shininess="0.3" rgba="0.05 0.05 0.06 1"/>
+    <mesh name="left_base_0" file="base_0.obj"/>
+    <mesh name="left_base_1" file="base_1.obj"/>
+    <mesh name="left_shoulder_0" file="shoulder_0.obj"/>
+    <mesh name="left_shoulder_1" file="shoulder_1.obj"/>
+    <mesh name="left_shoulder_2" file="shoulder_2.obj"/>
+    <mesh name="left_upperarm_0" file="upperarm_0.obj"/>
+    <mesh name="left_upperarm_1" file="upperarm_1.obj"/>
+    <mesh name="left_upperarm_2" file="upperarm_2.obj"/>
+    <mesh name="left_upperarm_3" file="upperarm_3.obj"/>
+    <mesh name="left_forearm_0" file="forearm_0.obj"/>
+    <mesh name="left_forearm_1" file="forearm_1.obj"/>
+    <mesh name="left_forearm_2" file="forearm_2.obj"/>
+    <mesh name="left_forearm_3" file="forearm_3.obj"/>
+    <mesh name="left_wrist1_0" file="wrist1_0.obj"/>
+    <mesh name="left_wrist1_1" file="wrist1_1.obj"/>
+    <mesh name="left_wrist1_2" file="wrist1_2.obj"/>
+    <mesh name="left_wrist2_0" file="wrist2_0.obj"/>
+    <mesh name="left_wrist2_1" file="wrist2_1.obj"/>
+    <mesh name="left_wrist2_2" file="wrist2_2.obj"/>
+    <mesh name="left_wrist3" file="wrist3.obj"/>
+    <mesh name="left_rg_rg_cnc7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/cnc7.STL"/>
+    <mesh name="left_rg_rg_cnc_left" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/cnc_left.STL"/>
+    <mesh name="left_rg_rg_cnc_right" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/cnc_right.STL"/>
+    <mesh name="left_rg_rg_motor_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/motor_7.STL"/>
+    <mesh name="left_rg_rg_pla7_green" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/pla7_green.STL"/>
+    <mesh name="left_rg_rg_pla_left" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/pla_left.STL"/>
+    <mesh name="left_rg_rg_pla_right" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/pla_right.STL"/>
+    <mesh name="left_rg_rg_gripper_end_col_0" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_0.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_1" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_1.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_2" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_2.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_3" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_3.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_4" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_4.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_5" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_5.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_6" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_6.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_7.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_8" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_8.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_9" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_9.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_10" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_10.stl"/>
+    <mesh name="left_rg_rg_gripper_end_col_11" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_11.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_0" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_0.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_1" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_1.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_2" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_2.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_3" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_3.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_4" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_4.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_5" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_5.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_6" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_6.stl"/>
+    <mesh name="left_rg_rg_gripper_left_col_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_7.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_0" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_0.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_1" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_1.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_2" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_2.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_3" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_3.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_4" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_4.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_5" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_5.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_6" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_6.stl"/>
+    <mesh name="left_rg_rg_gripper_right_col_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_7.stl"/>
+    <mesh name="right_base_0" file="base_0.obj"/>
+    <mesh name="right_base_1" file="base_1.obj"/>
+    <mesh name="right_shoulder_0" file="shoulder_0.obj"/>
+    <mesh name="right_shoulder_1" file="shoulder_1.obj"/>
+    <mesh name="right_shoulder_2" file="shoulder_2.obj"/>
+    <mesh name="right_upperarm_0" file="upperarm_0.obj"/>
+    <mesh name="right_upperarm_1" file="upperarm_1.obj"/>
+    <mesh name="right_upperarm_2" file="upperarm_2.obj"/>
+    <mesh name="right_upperarm_3" file="upperarm_3.obj"/>
+    <mesh name="right_forearm_0" file="forearm_0.obj"/>
+    <mesh name="right_forearm_1" file="forearm_1.obj"/>
+    <mesh name="right_forearm_2" file="forearm_2.obj"/>
+    <mesh name="right_forearm_3" file="forearm_3.obj"/>
+    <mesh name="right_wrist1_0" file="wrist1_0.obj"/>
+    <mesh name="right_wrist1_1" file="wrist1_1.obj"/>
+    <mesh name="right_wrist1_2" file="wrist1_2.obj"/>
+    <mesh name="right_wrist2_0" file="wrist2_0.obj"/>
+    <mesh name="right_wrist2_1" file="wrist2_1.obj"/>
+    <mesh name="right_wrist2_2" file="wrist2_2.obj"/>
+    <mesh name="right_wrist3" file="wrist3.obj"/>
+    <mesh name="right_rg_rg_cnc7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/cnc7.STL"/>
+    <mesh name="right_rg_rg_cnc_left" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/cnc_left.STL"/>
+    <mesh name="right_rg_rg_cnc_right" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/cnc_right.STL"/>
+    <mesh name="right_rg_rg_motor_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/motor_7.STL"/>
+    <mesh name="right_rg_rg_pla7_green" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/pla7_green.STL"/>
+    <mesh name="right_rg_rg_pla_left" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/pla_left.STL"/>
+    <mesh name="right_rg_rg_pla_right" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/pla_right.STL"/>
+    <mesh name="right_rg_rg_gripper_end_col_0" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_0.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_1" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_1.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_2" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_2.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_3" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_3.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_4" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_4.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_5" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_5.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_6" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_6.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_7.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_8" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_8.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_9" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_9.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_10" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_10.stl"/>
+    <mesh name="right_rg_rg_gripper_end_col_11" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_end_col_11.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_0" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_0.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_1" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_1.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_2" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_2.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_3" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_3.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_4" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_4.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_5" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_5.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_6" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_6.stl"/>
+    <mesh name="right_rg_rg_gripper_left_col_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_left_col_7.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_0" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_0.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_1" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_1.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_2" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_2.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_3" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_3.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_4" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_4.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_5" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_5.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_6" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_6.stl"/>
+    <mesh name="right_rg_rg_gripper_right_col_7" file="/home/sid/projects25/src/ZERO/robots/seeed_rebot_devarm/assets/gripper_right_col_7.stl"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+    <camera name="front" pos="1.15 0 1.15" quat="0.573635 0.413453 0.413453 0.573635" resolution="224 224" fovy="58"/>
+    <light pos="0 0 0" dir="0.276172 -0.276172 -0.920575" type="directional" ambient="0.1 0.1 0.1" diffuse="0.45 0.45 0.45" specular="0.05 0.05 0.05"/>
+    <light pos="0 0 0" dir="-0.357771 0.268328 -0.894427" type="directional" castshadow="false" ambient="0.1 0.1 0.1" diffuse="0.28 0.28 0.28" specular="0.05 0.05 0.05"/>
+    <body name="table" pos="0.05 0 0.73">
+      <geom name="table_top" size="0.6 0.7 0.02" type="box" material="table_mat"/>
+    </body>
+    <body name="leg0" pos="0.6 0.65 0.355">
+      <geom name="leg0_g" size="0.03 0.355" type="cylinder" material="leg_mat"/>
+    </body>
+    <body name="leg1" pos="0.6 -0.65 0.355">
+      <geom name="leg1_g" size="0.03 0.355" type="cylinder" material="leg_mat"/>
+    </body>
+    <body name="leg2" pos="-0.5 0.65 0.355">
+      <geom name="leg2_g" size="0.03 0.355" type="cylinder" material="leg_mat"/>
+    </body>
+    <body name="leg3" pos="-0.5 -0.65 0.355">
+      <geom name="leg3_g" size="0.03 0.355" type="cylinder" material="leg_mat"/>
+    </body>
+    <body name="left_plinth" pos="-0.15 0.6 0.375">
+      <geom name="left_plinth_g" size="0.1 0.1 0.375" type="box" material="leg_mat"/>
+    </body>
+    <body name="right_plinth" pos="-0.15 -0.6 0.375">
+      <geom name="right_plinth_g" size="0.1 0.1 0.375" type="box" material="leg_mat"/>
+    </body>
+    <body name="left_base" childclass="left_ur5e" pos="-0.15 0.6 0.75" quat="0 0 0 -1">
+      <inertial pos="0 0 0" mass="4" diaginertia="0.00443333 0.00443333 0.0072"/>
+      <geom class="left_visual" material="left_black" mesh="left_base_0"/>
+      <geom class="left_visual" material="left_jointgray" mesh="left_base_1"/>
+      <body name="left_shoulder_link" pos="0 0 0.163">
+        <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666"/>
+        <joint name="left_shoulder_pan_joint" class="left_size3" pos="0 0 0" axis="0 0 1"/>
+        <geom class="left_visual" material="left_urblue" mesh="left_shoulder_0"/>
+        <geom class="left_visual" material="left_black" mesh="left_shoulder_1"/>
+        <geom class="left_visual" material="left_jointgray" mesh="left_shoulder_2"/>
+        <geom class="left_collision" size="0.06 0.06" pos="0 0 -0.04"/>
+        <body name="left_upper_arm_link" pos="0 0.138 0" quat="0.707107 0 0.707107 0">
+          <inertial pos="0 0 0.2125" mass="8.393" diaginertia="0.133886 0.133886 0.0151074"/>
+          <joint name="left_shoulder_lift_joint" class="left_size3" pos="0 0 0" axis="0 1 0"/>
+          <geom class="left_visual" material="left_linkgray" mesh="left_upperarm_0"/>
+          <geom class="left_visual" material="left_black" mesh="left_upperarm_1"/>
+          <geom class="left_visual" material="left_jointgray" mesh="left_upperarm_2"/>
+          <geom class="left_visual" material="left_urblue" mesh="left_upperarm_3"/>
+          <geom class="left_collision" size="0.06 0.06" pos="0 -0.04 0" quat="0.707107 0.707107 0 0"/>
+          <geom class="left_collision" size="0.05 0.2" pos="0 0 0.2"/>
+          <body name="left_forearm_link" pos="0 -0.131 0.425">
+            <inertial pos="0 0 0.196" mass="2.275" diaginertia="0.0311796 0.0311796 0.004095"/>
+            <joint name="left_elbow_joint" class="left_size3_limited" pos="0 0 0" axis="0 1 0"/>
+            <geom class="left_visual" material="left_urblue" mesh="left_forearm_0"/>
+            <geom class="left_visual" material="left_linkgray" mesh="left_forearm_1"/>
+            <geom class="left_visual" material="left_black" mesh="left_forearm_2"/>
+            <geom class="left_visual" material="left_jointgray" mesh="left_forearm_3"/>
+            <geom class="left_collision" size="0.055 0.06" pos="0 0.08 0" quat="0.707107 0.707107 0 0"/>
+            <geom class="left_collision" size="0.038 0.19" pos="0 0 0.2"/>
+            <body name="left_wrist_1_link" pos="0 0 0.392" quat="0.707107 0 0.707107 0">
+              <inertial pos="0 0.127 0" mass="1.219" diaginertia="0.0025599 0.0025599 0.0021942"/>
+              <joint name="left_wrist_1_joint" class="left_size1" pos="0 0 0" axis="0 1 0"/>
+              <geom class="left_visual" material="left_black" mesh="left_wrist1_0"/>
+              <geom class="left_visual" material="left_urblue" mesh="left_wrist1_1"/>
+              <geom class="left_visual" material="left_jointgray" mesh="left_wrist1_2"/>
+              <geom class="left_collision" size="0.04 0.07" pos="0 0.05 0" quat="0.707107 0.707107 0 0"/>
+              <body name="left_wrist_2_link" pos="0 0.127 0">
+                <inertial pos="0 0 0.1" mass="1.219" diaginertia="0.0025599 0.0025599 0.0021942"/>
+                <joint name="left_wrist_2_joint" class="left_size1" pos="0 0 0" axis="0 0 1"/>
+                <geom class="left_visual" material="left_black" mesh="left_wrist2_0"/>
+                <geom class="left_visual" material="left_urblue" mesh="left_wrist2_1"/>
+                <geom class="left_visual" material="left_jointgray" mesh="left_wrist2_2"/>
+                <geom class="left_collision" size="0.04 0.06" pos="0 0 0.04"/>
+                <geom class="left_collision" size="0.04 0.04" pos="0 0.02 0.1" quat="0.707107 0.707107 0 0"/>
+                <body name="left_wrist_3_link" pos="0 0 0.1">
+                  <inertial pos="0 0.0771683 0" quat="0.707107 0 0 0.707107" mass="0.1889" diaginertia="0.000132134 9.90863e-05 9.90863e-05"/>
+                  <joint name="left_wrist_3_joint" class="left_size1" pos="0 0 0" axis="0 1 0"/>
+                  <geom class="left_visual" material="left_linkgray" mesh="left_wrist3"/>
+                  <geom class="left_eef_collision" size="0.04 0.02" pos="0 0.08 0" quat="0.707107 0.707107 0 0"/>
+                  <site name="left_attachment_site" pos="0 0.1 0" quat="-0.707107 0.707107 0 0"/>
+                  <body name="left_rg_gripper_end" pos="0 0.21 0" quat="0.5 -0.5 -0.5 0.5">
+                    <inertial pos="-0.112752 0.000128443 -5.72602e-06" quat="0.504636 0.498456 -0.49563 0.501234" mass="0.65" diaginertia="0.000453574 0.000373537 0.000158259"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_0"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_1"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_2"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_3"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_4"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_5"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_6"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_7"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_8"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_9"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_10"/>
+                    <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_end_col_11"/>
+                    <geom class="left_rg_rg_visual" material="left_rg_rg_lime" mesh="left_rg_rg_pla7_green"/>
+                    <geom class="left_rg_rg_visual" material="left_rg_rg_alum" mesh="left_rg_rg_cnc7"/>
+                    <geom class="left_rg_rg_visual" material="left_rg_rg_black" mesh="left_rg_rg_motor_7"/>
+                    <site name="left_eef" pos="-0.0109 0 0.005" size="0.008" group="4"/>
+                    <camera name="left_wrist" pos="-0.1009 0 0.005" quat="0.5 -0.5 -0.5 0.5" resolution="224 224" fovy="70"/>
+                    <body name="left_rg_gripper_left" pos="-0.041939 -7.3385e-05 0" quat="0.5 0.5 -0.5 0.5">
+                      <inertial pos="-0.00218009 0.018709 0.00932189" mass="0.0752" diaginertia="1.09878e-05 9.50146e-06 9.3078e-06"/>
+                      <joint name="left_rg_gripper_joint1" class="left_rg_rg_gripper" pos="0 0 0" axis="0 0 1" type="slide" range="0 0.05"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_0"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_1"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_2"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_3"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_4"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_5"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_6"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_left_col_7"/>
+                      <geom class="left_rg_rg_visual" material="left_rg_rg_black" mesh="left_rg_rg_pla_left"/>
+                      <geom class="left_rg_rg_visual" material="left_rg_rg_alum" mesh="left_rg_rg_cnc_left"/>
+                      <site name="left_gripper_left_ft_site" pos="0 0 0" group="4"/>
+                    </body>
+                    <body name="left_rg_gripper_right" pos="-0.041939 7.3385e-05 0" quat="0.5 -0.5 -0.5 -0.5">
+                      <inertial pos="0.00218009 -0.018709 0.00932189" mass="0.0752" diaginertia="1.09878e-05 9.50146e-06 9.3078e-06"/>
+                      <joint name="left_rg_gripper_joint2" class="left_rg_rg_gripper" pos="0 0 0" axis="0 0 1" type="slide" range="0 0.05"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_0"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_1"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_2"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_3"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_4"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_5"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_6"/>
+                      <geom class="left_rg_rg_collision" mesh="left_rg_rg_gripper_right_col_7"/>
+                      <geom class="left_rg_rg_visual" material="left_rg_rg_black" mesh="left_rg_rg_pla_right"/>
+                      <geom class="left_rg_rg_visual" material="left_rg_rg_alum" mesh="left_rg_rg_cnc_right"/>
+                      <site name="left_gripper_right_ft_site" pos="0 0 0" group="4"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="right_base" childclass="right_ur5e" pos="-0.15 -0.6 0.75" quat="0 0 0 -1">
+      <inertial pos="0 0 0" mass="4" diaginertia="0.00443333 0.00443333 0.0072"/>
+      <geom class="right_visual" material="right_black" mesh="right_base_0"/>
+      <geom class="right_visual" material="right_jointgray" mesh="right_base_1"/>
+      <body name="right_shoulder_link" pos="0 0 0.163">
+        <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666"/>
+        <joint name="right_shoulder_pan_joint" class="right_size3" pos="0 0 0" axis="0 0 1"/>
+        <geom class="right_visual" material="right_urblue" mesh="right_shoulder_0"/>
+        <geom class="right_visual" material="right_black" mesh="right_shoulder_1"/>
+        <geom class="right_visual" material="right_jointgray" mesh="right_shoulder_2"/>
+        <geom class="right_collision" size="0.06 0.06" pos="0 0 -0.04"/>
+        <body name="right_upper_arm_link" pos="0 0.138 0" quat="0.707107 0 0.707107 0">
+          <inertial pos="0 0 0.2125" mass="8.393" diaginertia="0.133886 0.133886 0.0151074"/>
+          <joint name="right_shoulder_lift_joint" class="right_size3" pos="0 0 0" axis="0 1 0"/>
+          <geom class="right_visual" material="right_linkgray" mesh="right_upperarm_0"/>
+          <geom class="right_visual" material="right_black" mesh="right_upperarm_1"/>
+          <geom class="right_visual" material="right_jointgray" mesh="right_upperarm_2"/>
+          <geom class="right_visual" material="right_urblue" mesh="right_upperarm_3"/>
+          <geom class="right_collision" size="0.06 0.06" pos="0 -0.04 0" quat="0.707107 0.707107 0 0"/>
+          <geom class="right_collision" size="0.05 0.2" pos="0 0 0.2"/>
+          <body name="right_forearm_link" pos="0 -0.131 0.425">
+            <inertial pos="0 0 0.196" mass="2.275" diaginertia="0.0311796 0.0311796 0.004095"/>
+            <joint name="right_elbow_joint" class="right_size3_limited" pos="0 0 0" axis="0 1 0"/>
+            <geom class="right_visual" material="right_urblue" mesh="right_forearm_0"/>
+            <geom class="right_visual" material="right_linkgray" mesh="right_forearm_1"/>
+            <geom class="right_visual" material="right_black" mesh="right_forearm_2"/>
+            <geom class="right_visual" material="right_jointgray" mesh="right_forearm_3"/>
+            <geom class="right_collision" size="0.055 0.06" pos="0 0.08 0" quat="0.707107 0.707107 0 0"/>
+            <geom class="right_collision" size="0.038 0.19" pos="0 0 0.2"/>
+            <body name="right_wrist_1_link" pos="0 0 0.392" quat="0.707107 0 0.707107 0">
+              <inertial pos="0 0.127 0" mass="1.219" diaginertia="0.0025599 0.0025599 0.0021942"/>
+              <joint name="right_wrist_1_joint" class="right_size1" pos="0 0 0" axis="0 1 0"/>
+              <geom class="right_visual" material="right_black" mesh="right_wrist1_0"/>
+              <geom class="right_visual" material="right_urblue" mesh="right_wrist1_1"/>
+              <geom class="right_visual" material="right_jointgray" mesh="right_wrist1_2"/>
+              <geom class="right_collision" size="0.04 0.07" pos="0 0.05 0" quat="0.707107 0.707107 0 0"/>
+              <body name="right_wrist_2_link" pos="0 0.127 0">
+                <inertial pos="0 0 0.1" mass="1.219" diaginertia="0.0025599 0.0025599 0.0021942"/>
+                <joint name="right_wrist_2_joint" class="right_size1" pos="0 0 0" axis="0 0 1"/>
+                <geom class="right_visual" material="right_black" mesh="right_wrist2_0"/>
+                <geom class="right_visual" material="right_urblue" mesh="right_wrist2_1"/>
+                <geom class="right_visual" material="right_jointgray" mesh="right_wrist2_2"/>
+                <geom class="right_collision" size="0.04 0.06" pos="0 0 0.04"/>
+                <geom class="right_collision" size="0.04 0.04" pos="0 0.02 0.1" quat="0.707107 0.707107 0 0"/>
+                <body name="right_wrist_3_link" pos="0 0 0.1">
+                  <inertial pos="0 0.0771683 0" quat="0.707107 0 0 0.707107" mass="0.1889" diaginertia="0.000132134 9.90863e-05 9.90863e-05"/>
+                  <joint name="right_wrist_3_joint" class="right_size1" pos="0 0 0" axis="0 1 0"/>
+                  <geom class="right_visual" material="right_linkgray" mesh="right_wrist3"/>
+                  <geom class="right_eef_collision" size="0.04 0.02" pos="0 0.08 0" quat="0.707107 0.707107 0 0"/>
+                  <site name="right_attachment_site" pos="0 0.1 0" quat="-0.707107 0.707107 0 0"/>
+                  <body name="right_rg_gripper_end" pos="0 0.21 0" quat="0.5 -0.5 -0.5 0.5">
+                    <inertial pos="-0.112752 0.000128443 -5.72602e-06" quat="0.504636 0.498456 -0.49563 0.501234" mass="0.65" diaginertia="0.000453574 0.000373537 0.000158259"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_0"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_1"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_2"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_3"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_4"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_5"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_6"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_7"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_8"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_9"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_10"/>
+                    <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_end_col_11"/>
+                    <geom class="right_rg_rg_visual" material="right_rg_rg_lime" mesh="right_rg_rg_pla7_green"/>
+                    <geom class="right_rg_rg_visual" material="right_rg_rg_alum" mesh="right_rg_rg_cnc7"/>
+                    <geom class="right_rg_rg_visual" material="right_rg_rg_black" mesh="right_rg_rg_motor_7"/>
+                    <site name="right_eef" pos="-0.0109 0 0.005" size="0.008" group="4"/>
+                    <camera name="right_wrist" pos="-0.1009 0 0.005" quat="0.5 -0.5 -0.5 0.5" resolution="224 224" fovy="70"/>
+                    <body name="right_rg_gripper_left" pos="-0.041939 -7.3385e-05 0" quat="0.5 0.5 -0.5 0.5">
+                      <inertial pos="-0.00218009 0.018709 0.00932189" mass="0.0752" diaginertia="1.09878e-05 9.50146e-06 9.3078e-06"/>
+                      <joint name="right_rg_gripper_joint1" class="right_rg_rg_gripper" pos="0 0 0" axis="0 0 1" type="slide" range="0 0.05"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_0"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_1"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_2"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_3"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_4"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_5"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_6"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_left_col_7"/>
+                      <geom class="right_rg_rg_visual" material="right_rg_rg_black" mesh="right_rg_rg_pla_left"/>
+                      <geom class="right_rg_rg_visual" material="right_rg_rg_alum" mesh="right_rg_rg_cnc_left"/>
+                      <site name="right_gripper_left_ft_site" pos="0 0 0" group="4"/>
+                    </body>
+                    <body name="right_rg_gripper_right" pos="-0.041939 7.3385e-05 0" quat="0.5 -0.5 -0.5 -0.5">
+                      <inertial pos="0.00218009 -0.018709 0.00932189" mass="0.0752" diaginertia="1.09878e-05 9.50146e-06 9.3078e-06"/>
+                      <joint name="right_rg_gripper_joint2" class="right_rg_rg_gripper" pos="0 0 0" axis="0 0 1" type="slide" range="0 0.05"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_0"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_1"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_2"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_3"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_4"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_5"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_6"/>
+                      <geom class="right_rg_rg_collision" mesh="right_rg_rg_gripper_right_col_7"/>
+                      <geom class="right_rg_rg_visual" material="right_rg_rg_black" mesh="right_rg_rg_pla_right"/>
+                      <geom class="right_rg_rg_visual" material="right_rg_rg_alum" mesh="right_rg_rg_cnc_right"/>
+                      <site name="right_gripper_right_ft_site" pos="0 0 0" group="4"/>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="obj_root" pos="0.34 0.45 0.808">
+      <joint name="obj_free" type="free"/>
+      <geom name="obj_can" size="0.033 0.0575" type="cylinder" friction="2 0.05 0.002" solref="0.005" mass="0.015" rgba="0.72 0.11 0.13 1"/>
+    </body>
+    <body name="plate_root" pos="0.34 -0.45 0.758">
+      <joint name="plate_free" type="free"/>
+      <geom name="plate_object" size="0.13 0.09 0.008" type="box" mass="0.4" rgba="0.12 0.12 0.13 1"/>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="left_rg_gripper_end" body2="left_rg_gripper_left"/>
+    <exclude body1="left_rg_gripper_end" body2="left_rg_gripper_right"/>
+    <exclude body1="left_rg_gripper_left" body2="left_rg_gripper_right"/>
+    <exclude body1="right_rg_gripper_end" body2="right_rg_gripper_left"/>
+    <exclude body1="right_rg_gripper_end" body2="right_rg_gripper_right"/>
+    <exclude body1="right_rg_gripper_left" body2="right_rg_gripper_right"/>
+  </contact>
+
+  <equality>
+    <joint joint1="left_rg_gripper_joint1" joint2="left_rg_gripper_joint2" polycoef="0 1 0 0 0" solref="0.004" solimp="0.9999 0.99999"/>
+    <joint joint1="right_rg_gripper_joint1" joint2="right_rg_gripper_joint2" polycoef="0 1 0 0 0" solref="0.004" solimp="0.9999 0.99999"/>
+  </equality>
+
+  <actuator>
+    <general name="left_shoulder_pan_joint" joint="left_shoulder_pan_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="3000" biasprm="0 -3000 -243"/>
+    <general name="left_shoulder_lift_joint" joint="left_shoulder_lift_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="3000" biasprm="0 -3000 -243"/>
+    <general name="left_elbow_joint" joint="left_elbow_joint" ctrllimited="true" ctrlrange="-3.1415 3.1415" biastype="affine" gainprm="3000" biasprm="0 -3000 -243"/>
+    <general name="left_wrist_1_joint" joint="left_wrist_1_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="500" biasprm="0 -500 -40.5"/>
+    <general name="left_wrist_2_joint" joint="left_wrist_2_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="500" biasprm="0 -500 -40.5"/>
+    <general name="left_wrist_3_joint" joint="left_wrist_3_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="500" biasprm="0 -500 -40.5"/>
+    <general name="left_gripper1" joint="left_rg_gripper_joint1" ctrllimited="true" ctrlrange="0 0.05" forcerange="-15 15" biastype="affine" gainprm="5000" biasprm="0 -5000 -405"/>
+    <general name="left_gripper2" joint="left_rg_gripper_joint2" ctrllimited="true" ctrlrange="0 0.05" forcerange="-15 15" biastype="affine" gainprm="5000" biasprm="0 -5000 -405"/>
+    <general name="right_shoulder_pan_joint" joint="right_shoulder_pan_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="3000" biasprm="0 -3000 -243"/>
+    <general name="right_shoulder_lift_joint" joint="right_shoulder_lift_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="3000" biasprm="0 -3000 -243"/>
+    <general name="right_elbow_joint" joint="right_elbow_joint" ctrllimited="true" ctrlrange="-3.1415 3.1415" biastype="affine" gainprm="3000" biasprm="0 -3000 -243"/>
+    <general name="right_wrist_1_joint" joint="right_wrist_1_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="500" biasprm="0 -500 -40.5"/>
+    <general name="right_wrist_2_joint" joint="right_wrist_2_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="500" biasprm="0 -500 -40.5"/>
+    <general name="right_wrist_3_joint" joint="right_wrist_3_joint" ctrllimited="true" ctrlrange="-6.28319 6.28319" biastype="affine" gainprm="500" biasprm="0 -500 -40.5"/>
+    <general name="right_gripper1" joint="right_rg_gripper_joint1" ctrllimited="true" ctrlrange="0 0.05" forcerange="-15 15" biastype="affine" gainprm="5000" biasprm="0 -5000 -405"/>
+    <general name="right_gripper2" joint="right_rg_gripper_joint2" ctrllimited="true" ctrlrange="0 0.05" forcerange="-15 15" biastype="affine" gainprm="5000" biasprm="0 -5000 -405"/>
+  </actuator>
+
+  <sensor>
+    <force site="left_gripper_left_ft_site" name="left_gripper_left_ft_force"/>
+    <torque site="left_gripper_left_ft_site" name="left_gripper_left_ft_torque"/>
+    <force site="left_gripper_right_ft_site" name="left_gripper_right_ft_force"/>
+    <torque site="left_gripper_right_ft_site" name="left_gripper_right_ft_torque"/>
+    <force site="right_gripper_left_ft_site" name="right_gripper_left_ft_force"/>
+    <torque site="right_gripper_left_ft_site" name="right_gripper_left_ft_torque"/>
+    <force site="right_gripper_right_ft_site" name="right_gripper_right_ft_force"/>
+    <torque site="right_gripper_right_ft_site" name="right_gripper_right_ft_torque"/>
+  </sensor>
+
+  <keyframe>
+    <key name="home" qpos="-4.08687 -1.52834 2.17842 -0.446299 -5.77672 1.19631 0.05 0.05 0.610176 -1.64451 -2.21221 -2.54289 4.65109 1.30466 0.05 0.05 0.34 0.45 0.808 1 0 0 0 0.34 -0.45 0.758 1 0 0 0" ctrl="-4.08687 -1.52834 2.17842 -0.446299 -5.77672 1.19631 0.05 0.05 0.610176 -1.64451 -2.21221 -2.54289 4.65109 1.30466 0.05 0.05"/>
+  </keyframe>
+</mujoco>

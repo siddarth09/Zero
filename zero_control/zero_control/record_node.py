@@ -97,6 +97,7 @@ class Recorder(Node):
         self.declare_parameter("ft_rot", [0.0])       # 9 per sensor, sensor frame -> tool frame
         self.declare_parameter("ft_side", [""])       # which hand each sensor belongs to
         self.declare_parameter("grip_force", 1.0)     # N, for normalising the magnitude
+        self.declare_parameter("ft_bias", 0.0)        # N, no-load reading, see force.assemble
         self.declare_parameter("eef_offset", [0.0, 0.0, 0.0])
         self.declare_parameter("play_sounds", True)  # spoken episode prompts, as lerobot does
         self.declare_parameter("keyboard", True)     # also accept lerobot's key bindings
@@ -122,6 +123,7 @@ class Recorder(Node):
         rot = np.asarray(self.get_parameter("ft_rot").value, dtype=float)
         self.ft_side = [x for x in self.get_parameter("ft_side").value if x]
         self.grip_force = max(float(self.get_parameter("grip_force").value), 1e-6)
+        self.ft_bias = float(self.get_parameter("ft_bias").value)
         if self.fts:
             if rot.size != 9 * len(self.fts) or len(self.ft_side) != len(self.fts):
                 raise SystemExit(
@@ -437,39 +439,15 @@ class Recorder(Node):
         return True
 
     def _tool_frame_force(self) -> np.ndarray:
-        """Per hand: net 6-D wrench in the tool frame, plus a normalised squeeze magnitude.
+        """Delegates to zero_control.force.assemble, which the policy node also uses.
 
-        These are two different physical quantities and must not be conflated:
-
-          net wrench = sum of the finger wrenches. The external load, i.e. the object's weight or
-              the gripper pressing on something. On a symmetric pinch it is near zero, because
-              the two pads push against each other and cancel.
-          squeeze    = mean of the per-finger force magnitudes. Grip strength, which is what the
-              sum destroys. Gripping the can measures 15.6 N and 14.5 N on the two pads: the sum
-              is ~1 N, the squeeze is ~15 N. Reporting only the sum made this read 0.098 during a
-              firm grasp.
-
-        Both are wanted, so both are reported. Sum and mean are each defined for any number of
-        fingers, so a two-finger jaw and a three-finger hand present the same feature, which is
-        the property the G1's Dex3 will need. Normalising the squeeze by this robot's own
-        grip-force cap (reBot 15 N, Panda 40 N) makes it comparable across embodiments.
+        Kept as a one-line wrapper rather than inlined at the call site so the docstring above
+        stays attached to the concept: the recorder and the policy must compute this identically,
+        or the model is fed a quantity it never trained on with nothing raising.
         """
-        out = []
-        for side in SIDES:
-            w = np.zeros(6)
-            mags = []
-            for i, sensor in enumerate(self.fts):
-                if self.ft_side[i] != side:
-                    continue
-                R = self.ft_rot[i]
-                v = self.ft[sensor]
-                f = R @ v[:3]
-                w[:3] += f
-                w[3:] += R @ v[3:]
-                mags.append(float(np.linalg.norm(f)))
-            squeeze = (sum(mags) / len(mags) / self.grip_force) if mags else 0.0
-            out.append(np.concatenate([w, [squeeze]]))
-        return np.concatenate(out).astype(np.float32)
+        from zero_control.force import assemble
+        return assemble(self.fts, self.ft_side, self.ft_rot, self.grip_force, self.ft,
+                        self.ft_bias)
 
     def _measured_poses(self) -> dict:
         """Measured end-effector pose per hand, by FK from the joints, not the commanded target."""

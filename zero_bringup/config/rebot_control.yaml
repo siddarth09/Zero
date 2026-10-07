@@ -5,11 +5,12 @@
   ros__parameters:
     robot: rebot
     eef_offset: [-0.0109, 0.0, 0.005]
+    eef_quat: [1.0, 0.0, 0.0, 0.0]
     grip_range: [0.0, 0.05]
     grip_ctrl_n: 2
-    pick_xyz: [0.34000, 0.45000, 0.80800]
-    place_xyz: [0.34000, -0.45000, 0.84438]
-    # tray rim top 0.77688, object height 0.11500
+    pick_xyz: [0.34000, 0.45000, 0.80746]
+    place_xyz: [0.34000, -0.45000, 0.84388]
+    # tray rim top 0.77638, object height 0.11500
     ws_min: [-0.5500, -0.7000, 0.8075]
     ws_max: [0.6500, 0.7000, 1.2000]
     cameras: ["front", "left_wrist", "right_wrist"]
